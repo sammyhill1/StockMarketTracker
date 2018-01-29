@@ -11,8 +11,13 @@ class stock():
 
         alphaVantage = alphaVantageClient(symbol)
 
-    def __sellPriceObjective(self):
+    def sellPriceObjective(self):
+        sellPriceObjective, puchasedPrice = 0
+
+        for i in self.stockShares:
+            puchasedPrice += i.purchasePrice
         sellPriceObjective = puchasedPrice * (1+self.percentRtnDesired/100)
+
         return sellPriceObjective
 
     def getCurPrice(self):
@@ -21,10 +26,17 @@ class stock():
         #don't want to do this. Perform call, save data in parse, then just pull the values I want
         self.curPrice = alphaVantage.request(self.symbol, )
 
-    def appendSharePurchase(self):
-        self.stockShares.append(__sharePurchase())
+    def appendSharePurchase(self, purchasePrice, sharesPurchased):
+        self.stockShares.append(__sharePurchase(purchasePrice, sharesPurchased))
 
-#Small "private" class to hold all the purchses of a given stock
+    def totalShares(self):
+        totalShares = 0
+        for i in self.stockShares:
+            totalShares += i.sharesPurchased
+
+        return totalShares
+
+#Small "private" class to hold purchase price and number of shares of a stock buy
 class __sharePurchase:
 
     def __init__(self, purchasePrice, sharesPurchased):
