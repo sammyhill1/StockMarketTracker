@@ -6,7 +6,8 @@ class stockPortfolio(stock):
         self.stocks = []
         super(stockPortfolio, self).__init__()
 
-    def addStock(self, stock):
+    def addNewStock(self, stock):
         self.stocks.append(stock)
+        #TODO check if stock name entered already exists, and group it within that individual stock
 
     def updatePortfolio(self):
