@@ -4,35 +4,47 @@ class stockDatabase():
 
     def __init__(self):
         self.stocks = []
+        self.stockIndex = 0 #Encode this into the stock list so that it is self aware of it's position. TODO make this better
         super(stockDatabase, self).__init__()
 
 class stockPortfolio(stockDatabase):
 
-    #def addNewStock(self, symbol, percentRtnDsired, purchasePrice, sharesPurchased):
-    #    if symbol not in stocks
-    #        self.stocks.append(stock(symbol, percentRtnDsired, purchasePrice, sharesPurchased))
+    def newPurchase(self, symbol, purchasePrice, sharesPurchased, percentRtnDesired = None):
+        try:
+            #Try a new sell, if the symbol is not found, a new stock object must be created and added to our list, but only if a desired % Rtn is defined
+            if not any(i.symbol == symbol for i in self.stocks): #Returns true if any stock with that symbol is found
+                if percentRtnDesired == None:
+                    raise ValueError("Can't add a stock with no percentRtnDesired! You Entered:", percentRtnDesired)
 
-    def newStockPurchase(self, symbol, percentRtnDesired, purchasePrice, sharesPurchased):
-        if not any(i.symbol == symbol for i in self.stocks): #Returns true if any stock with that symbol is found
-            self.stocks.append(stock(symbol, percentRtnDesired, purchasePrice, sharesPurchased))
-        else:
-            #TODO make more efficient find which stock we're looking for, search by symbol, retun index
-            test = self.__getSymbolIndex(i for i in self.stocks if i.symbol == symbol)
-            print(test.symbol)
-            error
+                else:
+                    self.stocks.append(stock(symbol, self.stockIndex, percentRtnDesired, purchasePrice, sharesPurchased))
+                    self.stockIndex += 1 #Keep track of the number of total stocks purchased
 
-    def stockShareSell(self, symbol, sellPrice, sharesSold):
-        #TODO
-        pass
+            #Otherwise add a share to an existing stock
+            else:
+                symbolIndex = self.getSymbolIndex(symbol)
+                self.stocks[symbolIndex].sharePurchase(purchasePrice, sharesPurchased) #Add a new stock purchase
+        except ValueError as err:
+            print(err.args)
 
+    def newSell(self, symbol, sellPrice, sharesSold):
+        try:
+            if any(i.symbol == symbol for i in self.stocks):
+                symbolIndex = self.getSymbolIndex(symbol)
+                self.stocks[symbolIndex].shareSell(sellPrice, sharesSold)
+            else:
+                raise ValueError("Stock not in portfolio!")
+        except ValueError as err:
+            print(err.args)
+
+    #TODO fix this class
     def updatePortfolio(self):
         for i in self.stocks:
             self.stocks.getCurPrice()
 
-    def __getSymbolIndex(self, default=None):
-        for i in self.stocks:
-            return i
-        return default
+    def getSymbolIndex(self, symbol):
+        curStock = [i for i in self.stocks if i.symbol == symbol] #Find list with symbol...TODO make this not return an entire list
+        return curStock[0].stockIndex
 
 class stockQuery(stockDatabase):
 
