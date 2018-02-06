@@ -1,9 +1,10 @@
-from stock import stock
+from stock import stockBase, stock, stockWindowShop
 
 class stockDatabase():
 
     def __init__(self):
         self.stocks = []
+        self.stocksHistory = []
         self.stockIndex = 0 #Encode this into the stock list so that it is self aware of it's position. TODO make this better
         super(stockDatabase, self).__init__()
 
@@ -17,7 +18,8 @@ class stockPortfolio(stockDatabase):
                     raise ValueError("Can't add a stock with no percentRtnDesired! You Entered:", percentRtnDesired)
 
                 else:
-                    self.stocks.append(stock(symbol, self.stockIndex, percentRtnDesired, purchasePrice, sharesPurchased))
+                    self.stocks.append(stock(percentRtnDesired, purchasePrice, sharesPurchased, symbol, self.stockIndex))
+
                     self.stockIndex += 1 #Keep track of the number of total stocks purchased
 
             #Otherwise add a share to an existing stock
@@ -32,6 +34,9 @@ class stockPortfolio(stockDatabase):
             if any(i.symbol == symbol for i in self.stocks):
                 symbolIndex = self.getSymbolIndex(symbol)
                 self.stocks[symbolIndex].shareSell(sellPrice, sharesSold)
+
+                # if self.stocks[symbolIndex].getTotalShares() == 0:
+                #     self.stocksHistory.append(stock(symbol, self.stockIndex, None))
             else:
                 raise ValueError("Stock not in portfolio!")
         except ValueError as err:
@@ -41,6 +46,7 @@ class stockPortfolio(stockDatabase):
     def updatePortfolio(self):
         for i in self.stocks:
             self.stocks.getCurPrice()
+            #Only update stocks whose share count is not 0
 
     def getSymbolIndex(self, symbol):
         curStock = [i for i in self.stocks if i.symbol == symbol] #Find list with symbol...TODO make this not return an entire list

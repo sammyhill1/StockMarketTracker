@@ -7,7 +7,7 @@ def main():
     sp = stockPortfolio()
     sq  = stockQuery()
 
-    sp.newPurchase("MSFT", 78, 5, 0.1)
+    sp.newPurchase("MSFT", 78.07, 5, 0.1)
     sp.newPurchase("TGI", 24, 32, 0.9)
 
     print (sp.stocks[0].percentRtnDesired)
@@ -20,12 +20,15 @@ def main():
     sp.newPurchase("MSFT",24, 2, 0.4)
     sp.newPurchase("TGI", 25, 3)
     sp.newPurchase("XN", 25, 3, 0.1)
-    print(sp.stocks[0].getTotalInvestment())
-    print(sp.stocks[0].getTotalReturn())
-    sp.newSell("MSFT", 10000, 1)
-    sp.newSell("TGI", 10, 1)
+    sp.newSell("MSFT", 100.4, 7)
+    sp.newSell("TGI", 10.8, 1)
     sp.stocks[0].changeDesiredPercentRtn(0.4)
-    print(sp.stocks[0].getTotalReturn())
+
+    print("Total Investment for " + sp.stocks[0].symbol + ": $" + str(sp.stocks[0].getTotalInvestment()))
+    print("Total Return for " + sp.stocks[0].symbol + ": $" + str(sp.stocks[0].getTotalReturn()))
+    print("Total shares of " + sp.stocks[0].symbol + ": " + str(sp.stocks[0].getTotalShares()) )
+
+    # print("Total shares of " + sp.stocksHistory[0].symbol + ": " + str(sp.stocks[0].getTotalShares()) )
     # print (sp.stocks[0].percentRtnDesired)
     # print (sp.stocks[0].stockShares[1].sharesPurchased)
 

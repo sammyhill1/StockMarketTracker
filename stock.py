@@ -2,17 +2,29 @@
 #from apiCallType import apiCallType
 from importantEnums import activityType
 
-class stock():
-
-    def __init__(self, symbol, stockIndex, percentRtnDesired = None, purchasePrice = None, sharesPurchased = None): #default percentRtnDesired to 0 in case we just want to monitor a given stock
+class stockBase():
+    def __init__(self, symbol, stockIndex, *args): #default percentRtnDesired to 0 in case we just want to monitor a given stock
+        self.x = 1
         self.symbol = symbol
-        self.stockShares = [] #List of all share activity on a individual stock
-        self.percentRtnDesired = percentRtnDesired #Enter as percentage, can be None
         self.stockIndex = stockIndex
+        self.stockShares = [] #List of all share activity on a individual stock
+        # super(stockBase, self).__init__()
+        #alphaVantage = alphaVantageClient(symbol)
 
-        if (sharesPurchased and purchasePrice) != None:
-            self.sharePurchase(purchasePrice, sharesPurchased)
+        def getCurPrice(self):
+            pass
+            #apiCall = apiCallType.TIME_SERIES_INTRADAY(self.symbol, reportIntervals.daily.value, outputSizes.compact.value, dataTypes.json.value)
 
+            #don't want to do this. Perform call, save data in parse, then just pull the values I want
+            #self.curPrice = alphaVantage.request(self.symbol, )
+
+#These are stocks in which we have a vested interest
+class stock(stockBase):
+
+    def __init__(self, percentRtnDesired, purchasePrice, sharesPurchased, *args):
+        super(stock, self).__init__(*args) #TODO make this **kwargs?
+        self.percentRtnDesired = percentRtnDesired
+        self.sharePurchase(purchasePrice, sharesPurchased) #On first init, we bought a new stock, Hooray!
         #alphaVantage = alphaVantageClient(symbol)
 
     def getSellPriceObjective(self):
@@ -30,7 +42,10 @@ class stock():
     def getTotalShares(self):
         totalShares = 0
         for i in self.stockShares:
-            totalShares += i.shareActivity
+            if i.activityType == activityType.buy:
+                totalShares += i.shareActivity
+            else:
+                totalShares -= i.shareActivity
 
         return totalShares
 
@@ -47,17 +62,13 @@ class stock():
     def getTotalReturn(self):
         totalReturn = 0
         for i in self.stockShares:
-            totalReturn += (i.priceActivity * i.shareActivity)
+            if i.activityType == activityType.buy:
+                totalReturn += (i.priceActivity * i.shareActivity)
+            else:
+                totalReturn -= (i.priceActivity * i.shareActivity)
 
         #Negative return indicates more money has been put in than gotten out
         return -totalReturn
-
-    def getCurPrice(self):
-        pass
-        #apiCall = apiCallType.TIME_SERIES_INTRADAY(self.symbol, reportIntervals.daily.value, outputSizes.compact.value, dataTypes.json.value)
-
-        #don't want to do this. Perform call, save data in parse, then just pull the values I want
-        #self.curPrice = alphaVantage.request(self.symbol, )
 
     def sharePurchase(self, purchasePrice, sharesPurchased):
         self.stockShares.append(shareHistory(purchasePrice, sharesPurchased, activityType.buy))
@@ -68,10 +79,13 @@ class stock():
                 raise ValueError("Can't sell more stocks then are in the portfolio")
             else:
                 #Make the sell Negative to reflect that it's money gained!
-                self.stockShares.append(shareHistory(-sellPrice, sharesSold, activityType.sell))
+                self.stockShares.append(shareHistory(sellPrice, sharesSold, activityType.sell))
         except ValueError as err:
             print(err.args)
 
+#These are stocks we just watch, or "window shop"
+class stockWindowShop(stockBase):
+    pass
 
 
 #Small "private" class to hold purchase/sell price and number of shares bought/sold

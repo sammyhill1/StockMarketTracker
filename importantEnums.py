@@ -25,3 +25,4 @@ class dataTypes(Enum):
 class activityType(Enum):
     buy = 0
     sell = 1
+    watch = 2
