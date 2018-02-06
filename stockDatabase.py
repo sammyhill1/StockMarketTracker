@@ -5,7 +5,6 @@ class stockDatabase():
     def __init__(self):
         self.stocks = []
         self.stocksHistory = []
-        self.stockIndex = 0 #Encode this into the stock list so that it is self aware of it's position. TODO make this better
         super(stockDatabase, self).__init__()
 
 class stockPortfolio(stockDatabase):
@@ -18,9 +17,8 @@ class stockPortfolio(stockDatabase):
                     raise ValueError("Can't add a stock with no percentRtnDesired! You Entered:", percentRtnDesired)
 
                 else:
-                    self.stocks.append(stock(percentRtnDesired, purchasePrice, sharesPurchased, symbol, self.stockIndex))
-
-                    self.stockIndex += 1 #Keep track of the number of total stocks purchased
+                    stockIndex = len(self.stocks) #List is 0 indexed, so len is where we should put it (where we want it +1)
+                    self.stocks.append(stock(percentRtnDesired, purchasePrice, sharesPurchased, symbol, stockIndex))
 
             #Otherwise add a share to an existing stock
             else:
