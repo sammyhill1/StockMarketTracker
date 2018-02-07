@@ -3,10 +3,9 @@
 from importantEnums import activityType
 
 class stockBase():
-    def __init__(self, symbol, stockIndex, *args): #default percentRtnDesired to 0 in case we just want to monitor a given stock
+    def __init__(self, symbol): #default percentRtnDesired to 0 in case we just want to monitor a given stock
         self.x = 1
         self.symbol = symbol
-        self.stockIndex = stockIndex
         self.stockShares = [] #List of all share activity on a individual stock
         # super(stockBase, self).__init__()
         #alphaVantage = alphaVantageClient(symbol)

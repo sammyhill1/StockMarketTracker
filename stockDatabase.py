@@ -17,8 +17,7 @@ class stockPortfolio(stockDatabase):
                     raise ValueError("Can't add a stock with no percentRtnDesired! You Entered:", percentRtnDesired)
 
                 else:
-                    stockIndex = len(self.stocks) #List is 0 indexed, so len is where we should put it (where we want it +1)
-                    self.stocks.append(stock(percentRtnDesired, purchasePrice, sharesPurchased, symbol, stockIndex))
+                    self.stocks.append(stock(percentRtnDesired, purchasePrice, sharesPurchased, symbol))
 
             #Otherwise add a share to an existing stock
             else:
@@ -33,8 +32,10 @@ class stockPortfolio(stockDatabase):
                 symbolIndex = self.getSymbolIndex(symbol)
                 self.stocks[symbolIndex].shareSell(sellPrice, sharesSold)
 
-                # if self.stocks[symbolIndex].getTotalShares() == 0:
-                #     self.stocksHistory.append(stock(symbol, self.stockIndex, None))
+                #If our sell drives our total shares to 0, move that stock to stocksHistory
+                if self.stocks[symbolIndex].getTotalShares() == 0:
+                    stockRemoved = self.stocks.pop(symbolIndex)
+                    self.stocksHistory.append(stockRemoved)
             else:
                 raise ValueError("Stock not in portfolio!")
         except ValueError as err:
@@ -47,8 +48,10 @@ class stockPortfolio(stockDatabase):
             #Only update stocks whose share count is not 0
 
     def getSymbolIndex(self, symbol):
-        curStock = [i for i in self.stocks if i.symbol == symbol] #Find list with symbol...TODO make this not return an entire list
-        return curStock[0].stockIndex
+        #TODO add try catch for case where getSymbolIndex is not found!
+        for i, stock in enumerate(self.stocks):
+            if stock.symbol == symbol:
+                return i
 
 class stockQuery(stockDatabase):
 

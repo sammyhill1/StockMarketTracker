@@ -28,6 +28,8 @@ def main():
     print("Total Return for " + sp.stocks[0].symbol + ": $" + str(sp.stocks[0].getTotalReturn()))
     print("Total shares of " + sp.stocks[0].symbol + ": " + str(sp.stocks[0].getTotalShares()) )
 
+    print("Total Investment for " + sp.stocksHistory[0].symbol + ": $" + str(sp.stocksHistory[0].getTotalInvestment()))
+
     # print("Total shares of " + sp.stocksHistory[0].symbol + ": " + str(sp.stocks[0].getTotalShares()) )
     # print (sp.stocks[0].percentRtnDesired)
     # print (sp.stocks[0].stockShares[1].sharesPurchased)
