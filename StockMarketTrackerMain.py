@@ -24,6 +24,8 @@ def main():
     sp.newSell("TGI", 10.8, 1)
     sp.stocks[0].changeDesiredPercentRtn(0.4)
 
+    sp.stocks[0].getCurPrice()
+
     print("Total Investment for " + sp.stocks[0].symbol + ": $" + str(sp.stocks[0].getTotalInvestment()))
     print("Total Return for " + sp.stocks[0].symbol + ": $" + str(sp.stocks[0].getTotalReturn()))
     print("Total shares of " + sp.stocks[0].symbol + ": " + str(sp.stocks[0].getTotalShares()) )

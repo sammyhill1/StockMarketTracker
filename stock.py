@@ -1,4 +1,4 @@
-#from alphaVantageClient import alphaVantageClient
+from alphaVantageClient import alphaVantageClient
 #from apiCallType import apiCallType
 from importantEnums import activityType
 
@@ -8,14 +8,14 @@ class stockBase():
         self.symbol = symbol
         self.stockShares = [] #List of all share activity on a individual stock
         # super(stockBase, self).__init__()
-        #alphaVantage = alphaVantageClient(symbol)
+        self.alphaVantage = alphaVantageClient(symbol)
 
-        def getCurPrice(self):
-            pass
-            #apiCall = apiCallType.TIME_SERIES_INTRADAY(self.symbol, reportIntervals.daily.value, outputSizes.compact.value, dataTypes.json.value)
+    def getCurPrice(self):
+        #apiCall = apiCallType.TIME_SERIES_INTRADAY(self.symbol, reportIntervals.daily.value, outputSizes.compact.value, dataTypes.json.value)
 
-            #don't want to do this. Perform call, save data in parse, then just pull the values I want
-            #self.curPrice = alphaVantage.request(self.symbol, )
+        #don't want to do this. Perform call, save data in parse, then just pull the values I want
+        #TODO define apiCallType object here
+        self.curPrice = self.alphaVantage.request(self.symbol)
 
 #These are stocks in which we have a vested interest
 class stock(stockBase):
