@@ -3,6 +3,7 @@ import importantEnums
 class apiCallTypes():
 
     #String options for API call to alphaVantage
+    #TODO store these in a different way, maybe a dictionary or hash table
     functions = ["TIME_SERIES_INTRADAY",
                  "TIME_SERIES_DAILY",
                  "TIME_SERIES_DAILY_ADJUSTED",
@@ -72,29 +73,26 @@ class apiCallTypes():
     dataTypes = ["json", "csv"]
     allOptions = ["slowlimit","fastlimit", "slowlimit", "fastlimit", "signalperiod",]
 
-    #todo fill in
     def __init__(self, function, apiKey):
-        self.function = functions[function]
+        self.function = self.functions[function]
         self.apiKey = apiKey
-        super(apiCallTypes, self).__init__()
 
 #TODO handle cases where optional arguments are entered
 class StockTimeSeriesData(apiCallTypes):
-
-    def __init__(self, symbol, interval, timePeriod = None, seriesType = None, **kwargs):
-        super(StockTimeSeriesData, self).__init__(*args)
+    def __init__(self, function, apiKey, symbol, interval, **kwargs): #TODO Make this *args?
+        super().__init__(function, apiKey)
         self.symbol = symbol
-        self.interval = interval
+        self.interval = self.intervals[interval]
 
-        try:
-            if (timePeriod == None) and (seriesType == None):
-                raise ValueError("Stock Time Series Data must have either timePeriod or seriesType! You Entered timePeriod:", timePeriod, "You Entered seriesType:", seriesType)
-            else:
-                self.timePeriod = timePeriod
-                self.seriesType = seriesType
-
-        except ValueError as err:
-            print(err.args)
+        # try:
+        #     if (timePeriod == None) and (seriesType == None):
+        #         raise ValueError("Stock Time Series Data must have either timePeriod or seriesType! You Entered timePeriod:", timePeriod, "You Entered seriesType:", seriesType)
+        #     else:
+        #         self.timePeriod = timePeriod
+        #         self.seriesType = seriesType
+        #
+        # except ValueError as err:
+        #     print(err.args)
 
 class ForeignExchange(apiCallTypes):
     def __init__(self, *args):

@@ -1,6 +1,6 @@
 from alphaVantageClient import alphaVantageClient
 #from apiCallType import apiCallType
-from importantEnums import activityType
+from importantEnums import activityType, apiFunctions
 
 class stockBase():
     def __init__(self, symbol): #default percentRtnDesired to 0 in case we just want to monitor a given stock
@@ -10,16 +10,20 @@ class stockBase():
         # super(stockBase, self).__init__()
         self.alphaVantage = alphaVantageClient(symbol)
 
-    def getCurPrice(self):
+        self.curPrice = 0; #TMT TODO create container for stock data
+
+        #Don't define function here, define it when the desired API call is made
+
+    def getCurPrice(self, interval):
         #apiCall = apiCallType.TIME_SERIES_INTRADAY(self.symbol, reportIntervals.daily.value, outputSizes.compact.value, dataTypes.json.value)
 
-        #don't want to do this. Perform call, save data in parse, then just pull the values I want
-        #TODO define apiCallType object here
-        self.curPrice = self.alphaVantage.request(self.symbol)
+        #Perform call, save data, then parse
+        self.curPrice = self.alphaVantage.request(apiFunctions.TIME_SERIES_INTRADAY.value ,self.symbol, interval)
+
+        return self.curPrice
 
 #These are stocks in which we have a vested interest
 class stock(stockBase):
-
     def __init__(self, percentRtnDesired, purchasePrice, sharesPurchased, *args):
         super(stock, self).__init__(*args) #TODO make this **kwargs?
         self.percentRtnDesired = percentRtnDesired

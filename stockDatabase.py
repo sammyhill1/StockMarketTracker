@@ -1,4 +1,5 @@
 from stock import stockBase, stock, stockWindowShop
+from importantEnums import reportIntervals
 
 class stockDatabase():
 
@@ -44,7 +45,7 @@ class stockPortfolio(stockDatabase):
     #TODO fix this class
     def updatePortfolio(self):
         for i in self.stocks:
-            self.stocks.getCurPrice()
+            i.getCurPrice(reportIntervals.min5.value)
             #Only update stocks whose share count is not 0
 
     def getSymbolIndex(self, symbol):
